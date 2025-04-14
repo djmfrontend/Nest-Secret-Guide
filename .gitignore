@@ -1,0 +1,75 @@
+# 忽略 macOS 系统文件
+.DS_Store
+
+# 忽略 Windows 系统文件
+Thumbs.db
+
+# 忽略 Linux 系统文件
+*~
+
+# 忽略 Node.js 依赖目录
+node_modules/
+
+# 忽略构建产物目录
+/dist/
+/build/
+
+# 忽略日志文件
+*.log
+logs/
+
+# 忽略环境变量文件
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# 忽略 IDE 和编辑器的配置文件
+# VS Code
+.vscode/
+*.code-workspace
+
+# WebStorm
+.idea/
+
+# Vim
+*.swp
+*.swo
+
+# 忽略 npm 调试文件
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 忽略 yarn 的缓存和锁文件（如果使用 Yarn）
+.yarn/
+.yarn-integrity
+.pnp.*
+
+# 忽略 pnpm 的缓存和锁文件（如果使用 pnpm）
+.pnpm-store/
+pnpm-lock.yaml
+
+# 忽略 Husky 钩子文件
+.husky/
+
+# 忽略测试覆盖率报告
+coverage/
+
+# 忽略静态资源缓存文件
+/public/*.map
+/public/*.gz
+
+# 忽略打包工具生成的文件
+webpack.config.js
+babel.config.js
+postcss.config.js
+tailwind.config.js
+
+# 忽略上传的临时文件
+*.tmp
+*.temp
+
+# 自定义忽略规则
+# 在这里添加项目特定的忽略规则
