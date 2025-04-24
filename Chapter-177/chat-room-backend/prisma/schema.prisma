@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+
 }
 
 datasource db {
@@ -23,4 +23,5 @@ model User{
   headPic String @db.VarChar(100) @default("")
   createdTime DateTime @default(now())
   updatedTime DateTime @updatedAt
+  captcha String @db.VarChar(50) @default("")
 }
