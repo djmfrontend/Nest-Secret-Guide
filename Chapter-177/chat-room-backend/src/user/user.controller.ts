@@ -15,6 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { RedisService } from 'src/redis/redis.service';
 import { EmailService } from 'src/email/email.service';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -38,6 +39,12 @@ export class UserController {
       html: `<p>你的注册验证码是 ${code}</p>`,
     });
     return '发送成功';
+  }
+
+  @Post('login')
+  async login(@Body() body: LoginUserDto) {
+    const user = await this.userService.login(body);
+    return user;
   }
 
   // @Get()
