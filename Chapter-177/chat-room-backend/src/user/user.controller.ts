@@ -8,6 +8,7 @@ import {
   Delete,
   Inject,
   Query,
+  SetMetadata,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -48,9 +49,24 @@ export class UserController {
   @Post('login')
   async login(@Body() body: LoginUserDto) {
     const user = await this.userService.login(body);
-    return user;
+    return {
+      user,
+      token: this.jwtService.sign(
+        {
+          userId: user.id,
+          username: user.username,
+        },
+        {
+          expiresIn: '7d',
+        },
+      ),
+    };
   }
-
+  @Get('aaa')
+  @SetMetadata('require-login', true)
+  aaa() {
+    return 'aaa';
+  }
   // @Get()
   // findAll() {
   //   return this.userService.findAll();
