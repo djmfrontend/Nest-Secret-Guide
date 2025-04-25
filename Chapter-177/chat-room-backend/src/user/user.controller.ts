@@ -16,6 +16,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { RedisService } from 'src/redis/redis.service';
 import { EmailService } from 'src/email/email.service';
 import { LoginUserDto } from './dto/login-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('user')
 export class UserController {
@@ -23,6 +24,9 @@ export class UserController {
   private readonly redisService: RedisService;
   @Inject(EmailService)
   private readonly emailService: EmailService;
+
+  @Inject(JwtService)
+  private readonly jwtService: JwtService;
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
