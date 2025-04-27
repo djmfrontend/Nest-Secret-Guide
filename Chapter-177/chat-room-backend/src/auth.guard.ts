@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 
-interface JwtUserData {
+export interface JwtUserData {
   userId: number;
   username: string;
 }

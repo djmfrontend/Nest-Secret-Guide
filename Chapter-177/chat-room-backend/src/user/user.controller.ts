@@ -20,6 +20,8 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RequireLogin } from 'src/custom.decorator';
 import { UserInfo } from 'src/custom.decorator';
+import { JwtUserData } from 'src/auth.guard';
+import { UpdateUserPasswordDto } from './dto/update-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -70,24 +72,20 @@ export class UserController {
     console.log(user);
     return 'aaa';
   }
+  @Get('info')
+  @RequireLogin()
+  async info(@UserInfo() user: JwtUserData) {
+    console.log(user.userId);
+    const findUser = await this.userService.fineOne(user.userId);
+    return findUser;
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.userService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.userService.update(+id, updateUserDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.userService.remove(+id);
-  // }
+  @Post('update_password')
+  @RequireLogin()
+  async updatePasswrd(
+    @Body() body: UpdateUserPasswordDto,
+    @UserInfo() user: JwtUserData,
+  ) {
+    return this.userService.updatePassword(user.userId, body);
+  }
 }
