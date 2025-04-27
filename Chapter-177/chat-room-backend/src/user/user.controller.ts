@@ -18,6 +18,8 @@ import { RedisService } from 'src/redis/redis.service';
 import { EmailService } from 'src/email/email.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { RequireLogin } from 'src/custom.decorator';
+import { UserInfo } from 'src/custom.decorator';
 
 @Controller('user')
 export class UserController {
@@ -63,10 +65,12 @@ export class UserController {
     };
   }
   @Get('aaa')
-  @SetMetadata('require-login', true)
-  aaa() {
+  @RequireLogin()
+  aaa(@UserInfo() user) {
+    console.log(user);
     return 'aaa';
   }
+
   // @Get()
   // findAll() {
   //   return this.userService.findAll();
