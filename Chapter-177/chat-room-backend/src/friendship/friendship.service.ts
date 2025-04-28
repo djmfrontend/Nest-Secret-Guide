@@ -18,4 +18,12 @@ export class FriendshipService {
       },
     });
   }
+  async getFriendRequestList(userId: number) {
+    return await this.prismaService.friendRequest.findMany({
+      where: {
+        status: 0,
+        fromUserId: userId,
+      },
+    });
+  }
 }

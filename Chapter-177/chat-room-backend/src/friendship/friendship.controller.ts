@@ -28,7 +28,19 @@ export class FriendshipController {
   }
 
   @Get('request_list')
-  async list() {
-    //  TODO: 获取好友请求列表
+  @RequireLogin()
+  async list(@UserInfo() user: JwtUserData) {
+    return await this.friendshipService.getFriendRequestList(user.userId);
+  }
+
+  @Get('agree/:id')
+  async agree(@Param('id') id: string) {
+    //./ TODO: 同意id好友请求
+    // return await this.friendshipService.agreeFriendRequest(id);
+  }
+  @Get('reject/:id')
+  async reject(@Param('id') id: string) {
+    //./ TODO: 拒绝id好友请求
+    // return await this.friendshipService.rejectFriendRequest(id);
   }
 }
