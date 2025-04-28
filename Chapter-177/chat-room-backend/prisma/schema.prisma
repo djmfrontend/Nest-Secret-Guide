@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-
 }
 
 datasource db {
@@ -14,14 +13,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
+model User {
+  id             Int          @id @default(autoincrement())
+  username       String       @unique @db.VarChar(50)
+  password       String       @db.VarChar(50)
+  nickName       String       @db.VarChar(50)
+  email          String       @db.VarChar(50)
+  headPic        String       @default("") @db.VarChar(100)
+  createdTime    DateTime     @default(now())
+  updatedTime    DateTime     @updatedAt
+  captcha        String       @default("") @db.VarChar(50)
+  friends        Friendship[] @relation("userToFriend")
+  inverseFriends Friendship[] @relation("friendToUser")
+}
+
+model Friendship {
+  user     User @relation("userToFriend", fields: [userId], references: [id])
+  userId   Int
+  friend   User @relation("friendToUser", fields: [friendId], references: [id])
+  friendId Int
+
+  @@id([userId, friendId]) // 复合主键
+}
+
+
+model FriendRequest {
   id Int @id @default(autoincrement())
-  username String @db.VarChar(50) @unique
-  password String @db.VarChar(50)
-  nickName String @db.VarChar(50)
-  email String @db.VarChar(50)
-  headPic String @db.VarChar(100) @default("")
-  createdTime DateTime @default(now())
+  // 请求发送方
+  fromUserId Int
+  // 请求接收方
+  toUserId Int
+  // 添加理由
+  reason String @db.VarChar(100)
+  // 状态 0: 等待处理 1: 已同意 2: 已拒绝
+  status Int
+
+
+  cretedTime DateTime @default(now())
   updatedTime DateTime @updatedAt
-  captcha String @db.VarChar(50) @default("")
 }

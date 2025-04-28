@@ -8,12 +8,20 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { RedisService } from 'src/redis/redis.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdateUserPasswordDto } from './dto/update-password.dto';
-
+type SelectUser = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    username: true;
+    nickName: true;
+    email: true;
+    headPic: true;
+  };
+}>;
 @Injectable()
 export class UserService {
   @Inject(PrismaService)
@@ -113,13 +121,13 @@ export class UserService {
     return `This action removes a #${id} user`;
   }
   async register(user: RegisterUserDto) {
-    const captcha = await this.redisService.get(`captcha_${user.email}`);
-    if (!captcha) {
-      throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
-    }
-    if (captcha !== user.captcha) {
-      throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
-    }
+    // const captcha = await this.redisService.get(`captcha_${user.email}`);
+    // if (!captcha) {
+    //   throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
+    // }
+    // if (captcha !== user.captcha) {
+    //   throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
+    // }
     const foundUser = await this.prismaServce.user.findUnique({
       where: {
         username: user.username,
@@ -150,5 +158,45 @@ export class UserService {
       this.logger.error(e, UserService);
       return null;
     }
+  }
+
+  async getFriendship(userId: number) {
+    // const friends = await this.prismaServce
+    // this.prismaServce
+    /**
+     * SELECT * 
+          FROM friendship
+          WHERE userId = ? OR friendId = ?;
+     */
+    const friends = await this.prismaServce.friendship.findMany({
+      where: {
+        OR: [{ userId: userId }, { friendId: userId }],
+      },
+    });
+    const set = new Set<number>();
+    for (let i = 0; i < friends.length; i++) {
+      set.add(friends[i].userId as number);
+      set.add(friends[i].friendId as number);
+    }
+    const friendsList = [...set].filter((item) => item !== userId);
+    const res: SelectUser[] = [];
+    for (let i = 0; i < friendsList.length; i++) {
+      const user = await this.prismaServce.user.findUnique({
+        where: {
+          id: friendsList[i],
+        },
+        select: {
+          id: true,
+          username: true,
+          nickName: true,
+          headPic: true,
+          email: true,
+        },
+      });
+      if (user) {
+        res.push(user);
+      }
+    }
+    return res;
   }
 }

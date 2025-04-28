@@ -88,4 +88,10 @@ export class UserController {
   ) {
     return this.userService.updatePassword(user.userId, body);
   }
+
+  @Get('friendship')
+  @RequireLogin()
+  async friendship(@UserInfo() user: JwtUserData) {
+    return this.userService.getFriendship(user.userId);
+  }
 }

@@ -6,3 +6,15 @@ nest g resource email --no-spec 这个是创建全部的命令
 ### 目前来看 自定义装饰器和自定义参数装饰器 还挺有用的
 
 参数装饰器
+
+prisma 新模型 提示失效问题解决
+
+```
+rm -rf node_modules/.prisma/client
+npx prisma generate
+```
+
+需要重新生成下
+
+https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/generating-prisma-client?utm_source=CLI&utm_medium=generator-warning
+或者 自己定义生成的位置 然后引用生成的PrismaClient
