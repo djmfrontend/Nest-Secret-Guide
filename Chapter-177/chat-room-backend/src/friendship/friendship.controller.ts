@@ -26,4 +26,9 @@ export class FriendshipController {
       friendAddDto,
     );
   }
+
+  @Get('request_list')
+  async list() {
+    //  TODO: 获取好友请求列表
+  }
 }
