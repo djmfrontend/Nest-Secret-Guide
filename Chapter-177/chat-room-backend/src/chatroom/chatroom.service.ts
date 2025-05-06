@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateChatroomDto } from './dto/create-chatroom.dto';
 import { UpdateChatroomDto } from './dto/update-chatroom.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -75,6 +75,95 @@ export class ChatroomService {
         createdTime: true,
       },
     });
-    return chatRooms;
+    const res: any[] = [];
+    for (let i = 0; i < chatRooms.length; i++) {
+      const userIds = await this.prismaService.userChatRoom.findMany({
+        where: {
+          chatRoomId: chatRooms[i].id,
+        },
+        select: {
+          userId: true,
+        },
+      });
+      res.push({
+        ...chatRooms[i],
+        userCount: userIds.length,
+        userIds: userIds.map((item) => item.userId),
+      });
+    }
+    return res;
+  }
+  async getMembers(chatRoomId: number) {
+    const userIds = await this.prismaService.userChatRoom.findMany({
+      where: {
+        chatRoomId: chatRoomId,
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    const users = await this.prismaService.user.findMany({
+      where: {
+        id: {
+          in: userIds.map((item) => item.userId),
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+        nickName: true,
+        headPic: true,
+        createdTime: true,
+        email: true,
+      },
+    });
+    return users;
+  }
+  async joinRoom(roomId: number, userId: number) {
+    const room = await this.prismaService.chatRoom.findUnique({
+      where: {
+        id: roomId,
+      },
+      select: {
+        type: true,
+      },
+    });
+    if (!room?.type) {
+      throw new BadRequestException('一对一聊天室不能加人');
+    }
+    if (room) {
+      await this.prismaService.userChatRoom.create({
+        data: {
+          userId,
+          chatRoomId: roomId,
+        },
+      });
+      return '加入成功';
+    } else {
+      throw new BadRequestException('聊天室不存在');
+    }
+  }
+
+  async quit(roomId: number, userId: number) {
+    const room = await this.prismaService.chatRoom.findUnique({
+      where: {
+        id: roomId,
+      },
+    });
+    if (!room?.type) {
+      throw new BadRequestException('一对一聊天室不能退出');
+    }
+    if (room) {
+      await this.prismaService.userChatRoom.deleteMany({
+        where: {
+          userId,
+          chatRoomId: roomId,
+        },
+      });
+      return '退出成功';
+    } else {
+      throw new BadRequestException('聊天室不存在');
+    }
   }
 }

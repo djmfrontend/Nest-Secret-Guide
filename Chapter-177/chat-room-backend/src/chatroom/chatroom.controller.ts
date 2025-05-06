@@ -40,4 +40,21 @@ export class ChatroomController {
     }
     return await this.chatroomService.list(userId);
   }
+
+  // 查询聊天室所有用户
+  @Get('members')
+  async members(@Query('chatRoomId') chatRoomId: number) {
+    return await this.chatroomService.getMembers(chatRoomId);
+  }
+
+  // 加入群聊  邀请 房间ID 被加入者ID
+  @Get('join/:id/:userId')
+  async join(@Param('id') id: number, @Param('userId') userId: number) {
+    return await this.chatroomService.joinRoom(id, userId);
+  }
+  // 退出群聊
+  @Get('quit/:id/:userId')
+  async quit(@Param('id') id: number, @Param('userId') userId: number) {
+    return await this.chatroomService.quit(id, userId);
+  }
 }
