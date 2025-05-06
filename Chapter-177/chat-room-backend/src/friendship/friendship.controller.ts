@@ -34,12 +34,21 @@ export class FriendshipController {
   }
 
   @Get('agree/:id')
-  async agree(@Param('id') id: string) {
+  @RequireLogin()
+  async agree(@UserInfo() user: JwtUserData, @Param('id') id: string) {
+    const friendId = Number(id);
     //./ TODO: 同意id好友请求
-    // return await this.friendshipService.agreeFriendRequest(id);
+    return await this.friendshipService.agreeFriendRequest(
+      user.userId,
+      friendId,
+    );
   }
   @Get('reject/:id')
-  async reject(@Param('id') id: string) {
+  async reject(@Param('id') friendId: number, @UserInfo() user: JwtUserData) {
+    return await this.friendshipService.rejectFriendRequest(
+      user.userId,
+      friendId,
+    );
     //./ TODO: 拒绝id好友请求
     // return await this.friendshipService.rejectFriendRequest(id);
   }

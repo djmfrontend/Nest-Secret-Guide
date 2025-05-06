@@ -26,4 +26,46 @@ export class FriendshipService {
       },
     });
   }
+  async agreeFriendRequest(userId: number, friendId: number) {
+    // 先更新申请列表的状态
+
+    await this.prismaService.friendRequest.updateMany({
+      where: {
+        fromUserId: friendId,
+        toUserId: userId,
+        status: 0,
+      },
+      data: {
+        status: 1,
+      },
+    });
+    const res = await this.prismaService.friendship.findMany({
+      where: {
+        userId: userId,
+        friendId: friendId,
+      },
+    });
+    if (res.length > 0) {
+      return res;
+    } else {
+      return await this.prismaService.friendship.create({
+        data: {
+          userId: userId,
+          friendId: friendId,
+        },
+      });
+    }
+  }
+  async rejectFriendRequest(userId: number, friendId: number) {
+    await this.prismaService.friendRequest.updateMany({
+      where: {
+        fromUserId: friendId,
+        toUserId: userId,
+        status: 0,
+      },
+      data: {
+        status: 2,
+      },
+    });
+  }
 }
