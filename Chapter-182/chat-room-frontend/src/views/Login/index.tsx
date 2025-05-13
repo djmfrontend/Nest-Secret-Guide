@@ -1,13 +1,19 @@
 import { Form, Input, Button } from "antd";
 import api from "../../api";
+import { useNavigate } from "react-router";
 interface IFormData {
   username: string;
   password: string;
 }
 function Login() {
+  const navigate = useNavigate();
   const handleLogin = async (formData: IFormData) => {
-    const res = await api.login(formData.username, formData.password);
-    console.log(res);
+    const res = await api.userLogin({
+      username: formData.username,
+      password: formData.password,
+    });
+    localStorage.setItem("token", res.token);
+    localStorage.setItem("userInfo", JSON.stringify(res.user));
   };
   return (
     <div className="w-full max-w-sm mx-auto">
@@ -21,7 +27,11 @@ function Login() {
         </Form.Item>
         <Form.Item>
           <div className="flex justify-between">
-            <Button variant="link" color="blue">
+            <Button
+              variant="link"
+              color="blue"
+              onClick={() => navigate("/register")}
+            >
               创建账号
             </Button>
             <Button variant="link" color="blue">

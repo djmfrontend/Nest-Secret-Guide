@@ -5,6 +5,7 @@ import { ResponseInterceptor } from './common/interceptors/response/response.int
 import { AllExceptionsFilter } from './common/exceptions/all-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   // 参数校验
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,7 +16,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
   // 全局异常过滤器
   app.useGlobalFilters(new AllExceptionsFilter());
-  app.enableCors();
+
   await app.listen(process.env.PORT ?? 9008);
 }
 bootstrap();

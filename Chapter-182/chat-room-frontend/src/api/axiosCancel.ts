@@ -1,7 +1,6 @@
 import type { AxiosRequestConfig, Canceler } from "axios";
 import axios from "axios";
-
-const controller = new AbortController();
+import { isFunction } from "lodash";
 export const getPendingUrl = (config: AxiosRequestConfig) => {
   return [config.method, config.url].join("&");
 };
@@ -18,6 +17,15 @@ export class AxiosCanceler {
         }
       });
   }
+  /**
+   * @description: Clear all pending
+   */
+  removeAllPending() {
+    pendingMap.forEach((cancel) => {
+      cancel && isFunction(cancel) && cancel();
+    });
+    pendingMap.clear();
+  }
 
   removePending(config: AxiosRequestConfig) {
     const url = getPendingUrl(config);
@@ -28,5 +36,11 @@ export class AxiosCanceler {
       }
       pendingMap.delete(url);
     }
+  }
+  /**
+   * @description: reset
+   */
+  reset(): void {
+    pendingMap = new Map<string, Canceler>();
   }
 }

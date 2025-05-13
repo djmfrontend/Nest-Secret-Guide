@@ -37,7 +37,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message = '服务器内部错误';
     }
 
-    response.status(status).json({
+    response.status(200).json({
       code: status,
       data: null,
       message: message,
