@@ -1,0 +1,22 @@
+.iconBox {
+  height: var(--icon-box-size);
+  width: var(--icon-box-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: var(--color-hover-bg);
+    .iconfont {
+      color: var(--color-primary);
+    }
+  }
+}
+
+.activeIconBox {
+  background-color: var(--color-hover-bg);
+  .iconfont {
+    color: var(--color-primary);
+  }
+}

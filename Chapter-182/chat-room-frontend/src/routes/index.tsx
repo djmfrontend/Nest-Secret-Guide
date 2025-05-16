@@ -2,7 +2,7 @@ import Layout from "../Layout";
 import { createBrowserRouter } from "react-router";
 import Login from "../views/Login";
 import Register from "../views/Register";
-import Home from "../views/Home";
+import Main from "../views/Main";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -10,7 +10,16 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+
+        element: <Main />,
+      },
+      {
+        path: "friends",
+        element: <Main />,
+      },
+      {
+        path: "groupChat",
+        element: <Main />,
       },
       {
         path: "login",

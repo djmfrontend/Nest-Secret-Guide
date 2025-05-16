@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 import { ConfigProvider } from "antd";
 import { useLayoutEffect } from "react";
 import init from "./init/init";
+import styles from "./index.module.less";
 function Layout() {
   useLayoutEffect(() => {
     init();
@@ -9,7 +10,11 @@ function Layout() {
   return (
     <>
       <ConfigProvider>
-        <Outlet></Outlet>
+        <div className={styles.app}>
+          <div className={styles.appBody}>
+            <Outlet />
+          </div>
+        </div>
       </ConfigProvider>
     </>
   );
