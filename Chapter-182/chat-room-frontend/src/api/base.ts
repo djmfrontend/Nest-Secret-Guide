@@ -79,10 +79,12 @@ const request = extend({
 });
 
 request.interceptors.request.use((url, options) => {
+  const token = localStorage.getItem("token");
   const myOptions: any = {
     ...options,
     headers: {
       ...options.headers,
+      Authorization: `Bearer ${token}`,
     },
   };
 

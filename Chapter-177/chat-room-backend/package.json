@@ -25,6 +25,8 @@
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/platform-socket.io": "^11.1.1",
+    "@nestjs/websockets": "^11.1.1",
     "@prisma/client": "6.6.0",
     "@types/nodemailer": "^6.4.17",
     "ali-oss": "^6.22.0",
@@ -35,6 +37,7 @@
     "redis": "^4.7.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "socket.io": "^4.8.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

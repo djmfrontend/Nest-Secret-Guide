@@ -12,6 +12,8 @@ import { AuthGuard } from './auth.guard';
 import { FriendshipModule } from './friendship/friendship.module';
 import { ChatroomModule } from './chatroom/chatroom.module';
 import { OssModule } from './oss/oss.module';
+import { ChatModule } from './chat/chat.module';
+import { ChatHistoryModule } from './chat-history/chat-history.module';
 
 @Module({
   imports: [
@@ -37,6 +39,10 @@ import { OssModule } from './oss/oss.module';
     ChatroomModule,
 
     OssModule,
+
+    ChatModule,
+
+    ChatHistoryModule,
   ],
   controllers: [AppController],
   providers: [

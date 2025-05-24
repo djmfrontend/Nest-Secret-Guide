@@ -72,4 +72,21 @@ model UserChatRoom{
   @@id([userId, chatRoomId])
 }
 
+enum MessageTypeEnum {
+  TEXT
+  IMAGE
+  FILE
+  VIDEO
+  AUDIO
+  STICKER
+}
 
+model ChatHistory {
+  id Int @id @default(autoincrement())
+  content String @db.Text
+  type MessageTypeEnum
+  chatRoomId Int
+  senderId Int //  发送人
+  createdTime DateTime @default(now())
+  updatedTime DateTime @updatedAt
+}

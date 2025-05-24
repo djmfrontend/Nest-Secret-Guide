@@ -20,3 +20,5 @@ npx prisma generate
 https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/generating-prisma-client?utm_source=CLI&utm_medium=generator-warning
 或者 自己定义生成的位置 然后引用生成的PrismaClient
 如果没有提示 继续上述操作
+
+表创建1.现在prisma 中加入model 2.生成迁移 npx prisma migrate dev --name xxxx

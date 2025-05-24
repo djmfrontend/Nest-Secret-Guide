@@ -7,6 +7,8 @@ import { Tooltip } from "antd";
 import classnames from "classnames";
 import { useMainStore, setMainPageActiveTab } from "./store/main";
 import FriendsPage from "./friends";
+import { getFriends } from "./store/friends";
+import GroupChatPage from "./groupChat";
 
 function Main() {
   const initNavConfig: INavItem[] = [
@@ -24,7 +26,7 @@ function Main() {
       isLoad: false,
       key: "groupChat",
       iconFontSize: 32,
-      component: <div>222</div>,
+      component: <GroupChatPage />,
     },
   ];
   const mainPageActiveTab = useMainStore((state) => state.mainPageActiveTab);
@@ -57,6 +59,7 @@ function Main() {
     switchingNav(mainPageActiveTab);
   }, []);
   useEffect(() => {
+    getFriends();
     // 调用用户好友列表
   }, []);
   const [navConfig, setNavConfig] = useState<INavItem[]>(initNavConfig);

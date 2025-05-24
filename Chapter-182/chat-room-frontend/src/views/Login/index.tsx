@@ -14,6 +14,7 @@ function Login() {
     });
     localStorage.setItem("token", res.token);
     localStorage.setItem("userInfo", JSON.stringify(res.user));
+    navigate("/");
   };
   return (
     <div className="w-full max-w-sm mx-auto">

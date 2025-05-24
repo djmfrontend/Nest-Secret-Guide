@@ -1,0 +1,16 @@
+.f-single-line() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.f-lines(@lines) {
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-line-clamp: @lines;
+  line-clamp: @lines;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

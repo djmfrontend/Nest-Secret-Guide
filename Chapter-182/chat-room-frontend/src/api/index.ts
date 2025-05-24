@@ -1,5 +1,5 @@
 import createRequest from "./base";
-import type { ILogin, IRegister } from "./type";
+import type { ILogin, IRegister, IFriend } from "./type";
 
 /** 用户登录接口 */
 const userLogin = createRequest<{ username: string; password: string }, ILogin>(
@@ -18,4 +18,7 @@ const sendCaptcha = createRequest<{ address: string }, string>(
 const userRegister = createRequest<IRegister, any>("/user/register", {
   method: "post",
 });
-export default { userLogin, sendCaptcha, userRegister };
+const userFriends = createRequest<void, IFriend[]>("/user/friendship", {
+  method: "get",
+});
+export default { userLogin, sendCaptcha, userRegister, userFriends };
