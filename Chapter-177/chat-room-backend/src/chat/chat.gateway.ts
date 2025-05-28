@@ -9,10 +9,14 @@ import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Server, Socket } from 'socket.io';
+import { Inject } from '@nestjs/common';
+import { ChatHistoryService } from 'src/chat-history/chat-history.service';
+import { ChatHistory } from '@prisma/client';
 interface JoinRoomPayload {
   chatroomId: number;
   userId: number;
 }
+
 
 @WebSocketGateway({
   cros: {
@@ -23,13 +27,15 @@ interface SendMessagePayload {
   sendUserId: number;
   chatroomId: number;
   message: {
-    type: 'text' | 'image',
+    type: ChatHistory['type'],
     content: string
   }
 }
 export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
   @WebSocketServer() server: Server;
+  @Inject(ChatHistoryService)
+  private chatHistoryService: ChatHistoryService;
 
   @SubscribeMessage('joinRoom')
   joinRoom(
@@ -37,6 +43,7 @@ export class ChatGateway {
     @MessageBody() payload: JoinRoomPayload,
   ) {
     const roomName = payload.chatroomId.toString();
+
     client.join(roomName);
     this.server.to(roomName).emit('message', {
       type: 'joinRoom',
@@ -45,8 +52,14 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('sendMessage')
-  sendMessage(@MessageBody() payload:SendMessagePayload,@ConnectedSocket() client: Socket){
+ async sendMessage(@MessageBody() payload:SendMessagePayload,@ConnectedSocket() client: Socket){
     const roomName = payload.chatroomId.toString();
+    await this.chatHistoryService.add(payload.chatroomId,{
+      content:payload.message.content,
+      type:payload.message.type,
+      senderId:payload.sendUserId,
+      chatRoomId:payload.chatroomId
+    })
     this.server.to(roomName).emit('message',{
       type: 'sendMessage',
       userId: payload.sendUserId,

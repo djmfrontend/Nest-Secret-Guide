@@ -4,7 +4,8 @@ import classnames from "classnames";
 import { Dropdown } from "antd";
 import styles from "./index.module.less";
 import { useState } from "react";
-import { set } from "lodash";
+
+import ChatWindow from "@/components/ChatWindow";
 
 const FriendsPage = () => {
   const friends = useFriendStore((state) => state.friends);
@@ -34,6 +35,9 @@ const FriendsPage = () => {
       <div className={styles.layoutLeft}>
         <div className={styles.pageTitle}>好友</div>
         <div className={styles.menuBox}>{renderFriendsList()}</div>
+      </div>
+      <div className={styles.layoutRight}>
+        <ChatWindow></ChatWindow>
       </div>
     </div>
   );

@@ -15,6 +15,11 @@ import { UpdateChatHistoryDto } from './dto/update-chat-history.dto';
 export class ChatHistoryController {
   constructor(private readonly chatHistoryService: ChatHistoryService) {}
 
+  @Get('list')
+  async list(@Query('chatRoomId') chatRoomId: string) {
+    return this.chatHistoryService.list(+chatRoomId);
+  }
+
   @Post()
   create(@Body() createChatHistoryDto: CreateChatHistoryDto) {
     return this.chatHistoryService.create(createChatHistoryDto);
