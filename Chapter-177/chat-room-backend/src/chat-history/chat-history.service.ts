@@ -22,7 +22,7 @@ export class ChatHistoryService {
   create(createChatHistoryDto: CreateChatHistoryDto) {
     return 'This action adds a new chatHistory';
   }
-
+  createMessage() {}
   findAll() {
     return `This action returns all chatHistory`;
   }

@@ -80,13 +80,20 @@ enum MessageTypeEnum {
   AUDIO
   STICKER
 }
-
+enum MessageStatusEnum {
+  SENDING
+  SENT
+  DELIVERED
+  READ
+}
 model ChatHistory {
   id Int @id @default(autoincrement())
   content String @db.Text
   type MessageTypeEnum
-  chatRoomId Int
+  chatRoomId String @db.VarChar(50)
   senderId Int //  发送人
+  recipientId Int? // 接收人
   createdTime DateTime @default(now())
   updatedTime DateTime @updatedAt
+  status MessageStatusEnum @default(SENT)
 }

@@ -1,5 +1,6 @@
 import createRequest from "./base";
-import type { ILogin, IRegister, IFriend } from "./type";
+import type { ILogin, IRegister, IUser } from "./type";
+import type { IFriend } from "@/types";
 
 /** 用户登录接口 */
 const userLogin = createRequest<{ username: string; password: string }, ILogin>(
@@ -21,4 +22,16 @@ const userRegister = createRequest<IRegister, any>("/user/register", {
 const userFriends = createRequest<void, IFriend[]>("/user/friendship", {
   method: "get",
 });
-export default { userLogin, sendCaptcha, userRegister, userFriends };
+const userInfo = createRequest<void, IUser>("/user/info", {
+  method: "get",
+});
+// 获取聊天记录
+
+// export const getChatHistory = createRequest<{ chatRoomId: number }, any>(
+//   "/chat-history/list",
+//   {
+//     method: "get",
+//   }
+// );
+
+export default { userLogin, sendCaptcha, userRegister, userFriends, userInfo };

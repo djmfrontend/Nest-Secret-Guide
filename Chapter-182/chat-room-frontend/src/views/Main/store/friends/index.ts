@@ -12,11 +12,11 @@ export const useFriendStore = create<IFriendStore>()(
 );
 
 export const getFriends: () => Promise<IFriend[]> = () => {
+  console.log("222222");
   return new Promise((resolve, reject) => {
     api
       .userFriends()
       .then((res) => {
-        console.log("res", res);
         useFriendStore.setState({
           friends: res,
         });

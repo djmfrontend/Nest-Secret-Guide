@@ -1,19 +1,17 @@
 import { Form, Input, Button } from "antd";
 import api from "../../api";
 import { useNavigate } from "react-router";
+import { useAuthStore } from "@/store/user";
 interface IFormData {
   username: string;
   password: string;
 }
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuthStore();
   const handleLogin = async (formData: IFormData) => {
-    const res = await api.userLogin({
-      username: formData.username,
-      password: formData.password,
-    });
-    localStorage.setItem("token", res.token);
-    localStorage.setItem("userInfo", JSON.stringify(res.user));
+    await login(formData.username, formData.password);
+
     navigate("/");
   };
   return (

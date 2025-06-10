@@ -57,11 +57,9 @@ function Main() {
 
   useEffect(() => {
     switchingNav(mainPageActiveTab);
-  }, []);
-  useEffect(() => {
     getFriends();
-    // 调用用户好友列表
   }, []);
+
   const [navConfig, setNavConfig] = useState<INavItem[]>(initNavConfig);
   return (
     <div className={styles.page}>

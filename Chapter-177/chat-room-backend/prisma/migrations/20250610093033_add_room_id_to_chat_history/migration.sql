@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `ChatHistory` ADD COLUMN `recipientId` INTEGER NULL,
+    ADD COLUMN `status` ENUM('SENDING', 'SENT', 'DELIVERED', 'READ') NOT NULL DEFAULT 'SENT';

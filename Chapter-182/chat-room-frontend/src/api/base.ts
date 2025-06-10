@@ -179,7 +179,7 @@ export default function createRequest<P = void, R = void>(
 
             data,
           } = res;
-          console.log("res", res, errorLevel);
+
           if (code !== 200 && errorLevel === "toast") {
             delayTimeFn(() => {
               // window._notificationApi({

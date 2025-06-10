@@ -11,7 +11,7 @@ export interface RequestOptions {
 
 export type ErrorMessageMode = "none" | "modal" | "message" | undefined;
 
-interface IUser {
+export interface IUser {
   captcha: string;
   createdTime: string;
   email: string;
