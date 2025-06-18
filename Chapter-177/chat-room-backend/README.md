@@ -22,3 +22,12 @@ https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/generating-
 如果没有提示 继续上述操作
 
 表创建1.现在prisma 中加入model 2.生成迁移 npx prisma migrate dev --name xxxx
+
+#### 聊天模块
+
+聊天记录
+
+初始加入房间 返回最近的20条记录
+前端滚动 追加读取
+新消息实时更新
+本次存储在IndexDb中

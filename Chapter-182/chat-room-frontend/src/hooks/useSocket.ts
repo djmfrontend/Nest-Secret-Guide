@@ -1,10 +1,18 @@
-import type { Message } from "@/types";
+import type { Message, MessageType } from "@/types";
 import { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+
 interface UseSocketReturn {
   messages: Message[];
   users: Record<number, boolean>; // 用户ID => 是否在线
-  sendMessage: (roomId: number, content: string) => void;
+  sendMessage: (
+    sendUserId: number,
+    recipientId: number,
+    message: {
+      type: MessageType;
+      content: string;
+    }
+  ) => void;
   joinRoom: (userId: number, friendId: number) => void;
   leaveRoom: (roomId: number) => void;
 }
@@ -31,14 +39,16 @@ export const useSocket = (): UseSocketReturn => {
         console.log("socket disconnected");
       });
       // 接收新消息
-      socket.on("newMessage", (message: Message) => {
+      socket.on("message", (message: Message) => {
+        console.log("newMessage", message);
         messagesRef.current = [...messagesRef.current, message];
         setMessages([...messagesRef.current]);
       });
       // 用户上线和下线
       socket.on(
-        "userStatus",
+        "usersOnline",
         (payload: { userId: number; status: boolean }) => {
+          console.log("userStatus", payload);
           usersRef.current[payload.userId] = payload.status;
           setUsers({ ...usersRef.current });
         }
@@ -49,9 +59,16 @@ export const useSocket = (): UseSocketReturn => {
     };
     // 发送消息到指定房间
   }, []);
-  const sendMessage = (roomId: number, content: string) => {
-    if (socket && content.trim()) {
-      socket.emit("sendMessage", { roomId, content });
+  const sendMessage = (
+    sendUserId: number,
+    recipientId: number,
+    message: {
+      type: MessageType;
+      content: string;
+    }
+  ) => {
+    if (socket && message.content.trim()) {
+      socket.emit("sendMessage", { sendUserId, recipientId, message });
     }
   };
   const joinRoom = (userId: number, friendId: number) => {

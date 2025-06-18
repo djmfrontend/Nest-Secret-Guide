@@ -11,14 +11,18 @@ import {
 import { ChatHistoryService } from './chat-history.service';
 import { CreateChatHistoryDto } from './dto/create-chat-history.dto';
 import { UpdateChatHistoryDto } from './dto/update-chat-history.dto';
+import { HistoryPageDto } from './dto/history-page.dto';
 
 @Controller('chat-history')
 export class ChatHistoryController {
   constructor(private readonly chatHistoryService: ChatHistoryService) {}
 
-  @Get('list')
-  async list(@Query('chatRoomId') chatRoomId: string) {
-    return this.chatHistoryService.list(+chatRoomId);
+  @Post('list/:chatRoomId')
+  async list(
+    @Param('chatRoomId') chatRoomId: string,
+    @Body() historyPage: HistoryPageDto,
+  ) {
+    return this.chatHistoryService.list(chatRoomId, historyPage);
   }
 
   @Post()

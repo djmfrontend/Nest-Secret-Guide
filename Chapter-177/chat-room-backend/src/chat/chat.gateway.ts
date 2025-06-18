@@ -62,6 +62,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log(this.onlineUser);
     const { userId, friendId } = payload;
     const roomId = generatePrivateRoomId(userId, friendId);
+    console.log(roomId, '================');
     client.data.userId = userId;
     client.join(roomId);
     // 初始化房间在线用户列表
@@ -71,16 +72,30 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const roomUsers = this.onlineUser.get(roomId);
     const wasOnline = roomUsers?.has(userId);
     roomUsers?.add(userId);
+    // 获取房间内其他用户
+    const otherOnlineUsers = Array.from(roomUsers || []).filter(
+      (id) => id !== userId,
+    );
     if (!wasOnline) {
+      // 1. 通知房间内其他用户当前用户已上线
+      client.to(roomId).emit('userOnline', { userId });
+      // 2. 向当前用户发送房间内其他用户的在线状态
+      if (otherOnlineUsers.length > 0) {
+        client.emit('usersOnline', {
+          users: otherOnlineUsers.map((id) => ({ userId: id, status: true })),
+        });
+      }
       //
-      this.server.to(roomId).emit('userStatus', {
-        userId,
-        status: true,
-      });
+      // this.server.to(roomId).emit('userStatus', {
+      //   userId,
+      //   status: true,
+      // });
     }
-    // 获取历史消息
+    // 获取历史消息 需要通过callback返回
+
     return {
       success: true,
+      initialOnlineUsers: otherOnlineUsers,
     };
     // this.server.to(roomName).emit('message', {
     //   type: 'joinRoom',
@@ -93,11 +108,23 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() payload: SendMessagePayload,
     @ConnectedSocket() client: Socket,
   ) {
+    console.log(this.onlineUser);
     const { message, sendUserId, recipientId } = payload;
     if (client.data.userId !== sendUserId) {
+      console.log('用户信息错误');
       throw new WsException('用户信息错误');
     }
     const roomId = generatePrivateRoomId(sendUserId, recipientId);
+    console.log(roomId);
+    const newMessage = await this.chatHistoryService.createMessage({
+      senderId: sendUserId,
+      recipientId: recipientId,
+      content: message.content,
+      type: message.type,
+    });
+    this.server.to(roomId).emit('message', newMessage);
+    //// 检查接收者是否在线（在房间中），更新状态为已送达
+    // const isRecipientOnline = this.
     //创建消息实体并保存到数据库
     // await this.chatHistoryService.add(payload.chatroomId, {
     //   content: payload.message.content,
@@ -106,12 +133,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     //   chatRoomId: payload.chatroomId,
     // });
     // 构造发送给客户端的消息格式
-    const messageResponse = {};
-    this.server.to(roomId).emit('message', {
-      type: 'sendMessage',
-      userId: payload.sendUserId,
-      message: payload.message,
-    });
+    return {
+      event: 'messageSent',
+      data: newMessage,
+    };
   }
 
   @SubscribeMessage('findAllChat')

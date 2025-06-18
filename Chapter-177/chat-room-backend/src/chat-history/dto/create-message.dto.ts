@@ -1,3 +1,5 @@
+import { ChatHistory } from '@prisma/client';
+
 export enum MessageTypeEnum {
   TEXT = 'text',
   IMAGE = 'image',
@@ -11,5 +13,5 @@ export class CreateMessageDto {
   senderId: number;
   recipientId: number;
   content: string;
-  type: MessageTypeEnum; // 或者使用枚举
+  type: ChatHistory['type']; // 或者使用枚举
 }
