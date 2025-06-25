@@ -7,6 +7,7 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   WsException,
+  WsResponse,
 } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
@@ -29,6 +30,10 @@ interface SendMessagePayload {
     type: ChatHistory['type'];
     content: string;
   };
+}
+interface HistoryMessagePayload {
+  history: ChatHistory[];
+  count: number;
 }
 @WebSocketGateway({
   cros: {
@@ -55,10 +60,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private chatHistoryService: ChatHistoryService;
 
   @SubscribeMessage('joinRoom')
-  joinRoom(
+  async joinRoom(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: JoinRoomPayload,
-  ) {
+  ): Promise<WsResponse<HistoryMessagePayload>> {
     console.log(this.onlineUser);
     const { userId, friendId } = payload;
     const roomId = generatePrivateRoomId(userId, friendId);
@@ -92,10 +97,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       // });
     }
     // 获取历史消息 需要通过callback返回
+    const { count, list } = await this.chatHistoryService.list(roomId, {
+      page: 1,
+      size: 10,
+    });
 
     return {
-      success: true,
-      initialOnlineUsers: otherOnlineUsers,
+      event: 'initialHistory',
+      data: {
+        history: list,
+        count: count,
+      },
     };
     // this.server.to(roomName).emit('message', {
     //   type: 'joinRoom',

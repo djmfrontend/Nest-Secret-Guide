@@ -1,9 +1,10 @@
-import type { Message, MessageType } from "@/types";
+import type { Message, MessageType, HistoryMessage } from "@/types";
 import { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import type { HistoryMessagePayload } from "@/types";
 
 interface UseSocketReturn {
-  messages: Message[];
+  messages: HistoryMessage[];
   users: Record<number, boolean>; // 用户ID => 是否在线
   sendMessage: (
     sendUserId: number,
@@ -18,9 +19,9 @@ interface UseSocketReturn {
 }
 let socket: Socket;
 export const useSocket = (): UseSocketReturn => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<HistoryMessage[]>([]);
   const [users, setUsers] = useState<Record<number, boolean>>({});
-  const messagesRef = useRef<Message[]>([]); //保存消息的变量
+  const messagesRef = useRef<HistoryMessage[]>([]); //保存消息的变量
   const usersRef = useRef<Record<number, boolean>>({});
   useEffect(() => {
     if (!socket) {
@@ -39,7 +40,7 @@ export const useSocket = (): UseSocketReturn => {
         console.log("socket disconnected");
       });
       // 接收新消息
-      socket.on("message", (message: Message) => {
+      socket.on("message", (message: HistoryMessage) => {
         console.log("newMessage", message);
         messagesRef.current = [...messagesRef.current, message];
         setMessages([...messagesRef.current]);
@@ -53,6 +54,11 @@ export const useSocket = (): UseSocketReturn => {
           setUsers({ ...usersRef.current });
         }
       );
+      socket.on("initialHistory", (payload: HistoryMessagePayload) => {
+        messagesRef.current = payload.history;
+        setMessages([...messagesRef.current]);
+        //
+      });
     }
     return () => {
       //组件卸载时断开连接

@@ -5,6 +5,7 @@ import init from "./init/init";
 import styles from "./index.module.less";
 function Layout() {
   useLayoutEffect(() => {
+    console.log("init");
     init();
   }, []);
   return (

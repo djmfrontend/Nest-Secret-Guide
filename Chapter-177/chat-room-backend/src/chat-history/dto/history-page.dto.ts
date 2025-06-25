@@ -9,7 +9,7 @@ export class HistoryPageDto {
     type?: string;
     status?: string;
   };
-  sort: {
+  sort?: {
     field: string;
     order: 'desc' | 'asc';
   }[];

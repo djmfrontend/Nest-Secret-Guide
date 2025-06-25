@@ -1,0 +1,94 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+
+  overflow-y: auto;
+  background-color: #f5f5f5;
+}
+
+.messageContainer {
+  display: flex;
+  margin-bottom: 12px;
+
+  &.incoming {
+    justify-content: flex-start;
+  }
+
+  &.outgoing {
+    justify-content: flex-end;
+  }
+}
+
+.messageBubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  position: relative;
+  word-wrap: break-word;
+
+  .incoming & {
+    background-color: #fff;
+    border-top-left-radius: 0;
+  }
+
+  .outgoing & {
+    background-color: #95ec69;
+    border-top-right-radius: 0;
+  }
+}
+
+.messageMeta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #888;
+}
+
+.time {
+  margin-right: 6px;
+}
+
+.statusIcon {
+  color: #888;
+
+  &Read {
+    color: #4fc3f7;
+  }
+}
+
+.statusSending {
+  color: #888;
+  font-size: 12px;
+}
+
+.textContent {
+  white-space: pre-wrap;
+}
+
+.imageContent {
+  img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 4px;
+  }
+}
+
+.fileContent {
+  display: flex;
+  align-items: center;
+
+  .fileIcon {
+    font-size: 24px;
+    margin-right: 8px;
+  }
+
+  .fileName {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

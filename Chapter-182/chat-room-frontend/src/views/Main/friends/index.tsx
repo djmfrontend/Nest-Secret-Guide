@@ -38,7 +38,7 @@ const FriendsPage = () => {
   return (
     <div className={styles.box}>
       <div className={styles.layoutLeft}>
-        <div className={styles.pageTitle}>好友</div>
+        <div className={styles.pageTitle}>好友 {user?.nickName}</div>
         <div className={styles.menuBox}>{renderFriendsList()}</div>
       </div>
       <div className={styles.layoutRight}>

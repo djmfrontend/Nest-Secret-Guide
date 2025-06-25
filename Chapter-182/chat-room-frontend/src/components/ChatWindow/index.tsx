@@ -4,19 +4,19 @@ import { useSocket } from "@/hooks/useSocket";
 import { useAuthStore } from "@/store/user";
 import type { IFriend } from "@/types";
 import { Input, Button } from "antd";
+import {} from "react-window";
 import { MessageType } from "@/types";
+import { Content } from "./components/Content";
 
 import { generatePrivateRoomId } from "@/utils/room";
-interface Message {
-  type: "text" | "image";
-}
+
 interface IProps {
   friend: IFriend;
 }
 const ChatWindow = function (props: IProps) {
   const { friend } = props;
   console.log(friend);
-  const { user } = useAuthStore();
+  const { user, initialize } = useAuthStore();
   const { messages, users, sendMessage, joinRoom, leaveRoom } = useSocket();
   useEffect(() => {
     if (!user?.id || !friend) return;
@@ -24,8 +24,16 @@ const ChatWindow = function (props: IProps) {
     joinRoom(user.id, friend.id);
   }, []);
   const [messageText, setMessageText] = useState<string>("");
+  if (!user?.id) {
+    return <div>请先登录</div>;
+  }
   return (
-    <div>
+    <div className="w-full h-full">
+      <Content
+        messages={messages}
+        userId={user?.id}
+        className="h-[calc(100% - 200px)]"
+      ></Content>
       <div>
         <Input
           value={messageText}
@@ -41,6 +49,7 @@ const ChatWindow = function (props: IProps) {
         >
           发送
         </Button>
+        <Button onClick={() => initialize()}>111</Button>
       </div>
     </div>
   );

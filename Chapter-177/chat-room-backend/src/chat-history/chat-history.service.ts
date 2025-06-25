@@ -11,6 +11,7 @@ export class ChatHistoryService {
   @Inject(PrismaService)
   private prismaService: PrismaService;
   async list(chatRoomId: string, historyPage: HistoryPageDto) {
+    // 后续在完成过滤和排序功能 如何分页请看文档 https://www.prisma.io/docs/orm/prisma-client/queries/pagination
     const { page, size } = historyPage;
 
     const [historys, count] = await this.prismaService.$transaction([
