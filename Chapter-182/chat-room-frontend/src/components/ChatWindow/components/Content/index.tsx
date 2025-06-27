@@ -2,10 +2,10 @@ import MessageItem from "../MessageItem/index";
 import { VariableSizeList } from "react-window";
 import type { ListChildComponentProps } from "react-window";
 import type { HistoryMessage, MessageDirection } from "@/types";
-import { MessageType, MessageStatus } from "@/types/chat";
+import { MessageType } from "@/types/chat";
 import classnames from "classnames";
 import styles from "./index.module.less";
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 
 interface IProps {
   messages: HistoryMessage[];
@@ -36,14 +36,26 @@ const Row = ({
   );
 };
 export function Content(props: IProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dynamicHeight, setDynamicHeight] = useState(600);
   const {
     messages,
     userId,
     className,
-    listHeight = 600,
+
     listWidth = "100%",
-    itemSize = 100,
   } = props;
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        setDynamicHeight(containerRef.current.clientHeight);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   // 动态计算每项高度（根据消息内容类型）
   const getItemSize = (index: number) => {
     const message = messages[index];
@@ -60,32 +72,16 @@ export function Content(props: IProps) {
     () => ({ messages, currentUserId: userId }),
     [messages, userId]
   );
+  const listRef = useRef<VariableSizeList>(null);
+  useEffect(() => {
+    if (messages.length > 0) {
+      listRef.current?.scrollToItem(messages.length - 1, "end");
+    }
+  }, [messages]);
   return (
-    // <div className={classnames(styles.content, className)}>
-    //   {messages.map((message) => {
-    //     const direction = getMessageDirection(message.senderId);
-    //     return (
-    //       <div
-    //         key={message.id}
-    //         className={`${styles.messageContainer} ${styles[direction]}`}
-    //       >
-    //         <div className={styles.messageBubble}>
-    //           {renderMessageContent(message)}
-    //           <div className={styles.messageMeta}>
-    //             <span className={styles.time}>
-    //               {new Date(message.createdTime).toLocaleTimeString()}
-    //             </span>
-    //             {renderMessageStatus(message.status, direction)}
-    //           </div>
-    //         </div>
-    //       </div>
-    //     );
-    //   })}
-    // </div>
-
-    <div className={styles.content}>
+    <div className={classnames(className, styles.content)} ref={containerRef}>
       <VariableSizeList
-        height={listHeight}
+        height={dynamicHeight}
         width={listWidth}
         itemCount={messages.length}
         itemSize={getItemSize}

@@ -7,6 +7,7 @@ import { Input, Button } from "antd";
 import {} from "react-window";
 import { MessageType } from "@/types";
 import { Content } from "./components/Content";
+import ChatInput from "./components/ChatInput";
 
 import { generatePrivateRoomId } from "@/utils/room";
 
@@ -22,35 +23,30 @@ const ChatWindow = function (props: IProps) {
     if (!user?.id || !friend) return;
     // const roomId = generatePrivateRoomId(user.id, friend.id);
     joinRoom(user.id, friend.id);
-  }, []);
-  const [messageText, setMessageText] = useState<string>("");
+    return () => {
+      leaveRoom(user.id, friend.id);
+    };
+  }, [friend.id, user?.id]);
+
   if (!user?.id) {
     return <div>请先登录</div>;
   }
+
+  const handleSend = (content: string) => {
+    sendMessage(user.id, friend.id, {
+      type: MessageType.TEXT,
+      content: content,
+    });
+  };
   return (
-    <div className="w-full h-full">
+    <div className="h-full flex flex-col w-full">
       <Content
         messages={messages}
         userId={user?.id}
-        className="h-[calc(100% - 200px)]"
+        className="flex-1 "
       ></Content>
-      <div>
-        <Input
-          value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
-        ></Input>
-        <Button
-          onClick={() => {
-            sendMessage(user!.id, friend!.id, {
-              type: MessageType.TEXT,
-              content: messageText,
-            });
-          }}
-        >
-          发送
-        </Button>
-        <Button onClick={() => initialize()}>111</Button>
-      </div>
+
+      <ChatInput className="h-[80px]" onSend={handleSend}></ChatInput>
     </div>
   );
 };

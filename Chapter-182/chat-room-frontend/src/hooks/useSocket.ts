@@ -15,7 +15,7 @@ interface UseSocketReturn {
     }
   ) => void;
   joinRoom: (userId: number, friendId: number) => void;
-  leaveRoom: (roomId: number) => void;
+  leaveRoom: (userId: number, friendId: number) => void;
 }
 let socket: Socket;
 export const useSocket = (): UseSocketReturn => {
@@ -73,6 +73,7 @@ export const useSocket = (): UseSocketReturn => {
       content: string;
     }
   ) => {
+    console.log("sendMessage", sendUserId, recipientId, message);
     if (socket && message.content.trim()) {
       socket.emit("sendMessage", { sendUserId, recipientId, message });
     }
@@ -85,9 +86,12 @@ export const useSocket = (): UseSocketReturn => {
       });
     }
   };
-  const leaveRoom = (roomId: number) => {
+  const leaveRoom = (userId: number, friendId: number) => {
     if (socket) {
-      socket.emit("leaveRoom", roomId);
+      socket.emit("leaveRoom", {
+        userId,
+        friendId,
+      });
     }
   };
   return {

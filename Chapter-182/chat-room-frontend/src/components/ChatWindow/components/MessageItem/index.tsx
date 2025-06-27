@@ -1,4 +1,5 @@
 import type { HistoryMessage, MessageDirection } from "@/types";
+import dayjs from "dayjs";
 
 import { MessageType, MessageStatus } from "@/types/chat";
 import { forwardRef } from "react";
@@ -55,10 +56,13 @@ const MessageItem = forwardRef<HTMLDivElement, IProps>(function (props, ref) {
       ref={ref}
       className={`${styles.messageContainer} ${styles[direction]}`}
     >
+      <div>头像</div>
       <div className={styles.messageBubble}>
         {renderMessageContent()}
         <div className={styles.messageMeta}>
-          <span className={styles.time}>时间</span>
+          <span className={styles.time}>
+            {dayjs(message.createdTime).format("YYYY-MM-DD hh:mm:ss")}
+          </span>
           {renderMessageStatus(message.status)}
         </div>
       </div>

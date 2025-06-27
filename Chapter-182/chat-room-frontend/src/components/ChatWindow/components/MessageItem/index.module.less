@@ -1,0 +1,29 @@
+.messageContainer {
+  display: flex;
+  margin-bottom: 12px;
+
+  &.incoming {
+    justify-content: flex-start;
+  }
+
+  &.outgoing {
+    justify-content: flex-end;
+  }
+}
+.messageBubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  position: relative;
+  word-wrap: break-word;
+
+  .incoming & {
+    background-color: #fff;
+    border-top-left-radius: 0;
+  }
+
+  .outgoing & {
+    background-color: #95ec69;
+    border-top-right-radius: 0;
+  }
+}

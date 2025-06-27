@@ -39,3 +39,8 @@ export interface HistoryMessagePayload {
 }
 
 export type MessageDirection = "incoming" | "outgoing";
+
+export interface ToolItem {
+  name: string;
+  icon: string;
+}

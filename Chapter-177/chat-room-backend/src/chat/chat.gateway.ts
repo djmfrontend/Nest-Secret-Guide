@@ -170,4 +170,31 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   remove(@MessageBody() id: number) {
     return this.chatService.remove(id);
   }
+
+  @SubscribeMessage('leaveRoom')
+  async leaveRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: JoinRoomPayload,
+  ) {
+    const { userId, friendId } = payload;
+    const roomId = generatePrivateRoomId(userId, friendId);
+    await client.leave(roomId);
+    // 更新在线用户列表
+    if (this.onlineUser.has(roomId)) {
+      const roomUsers = this.onlineUser.get(roomId);
+      if (roomUsers?.has(userId)) {
+        roomUsers.delete(userId);
+
+        // 通知房间内其他用户当前用户已离线
+        client.to(roomId).emit('userOffline', { userId });
+
+        // 如果房间没有人了，清理房间数据
+        if (roomUsers.size === 0) {
+          this.onlineUser.delete(roomId);
+        }
+      }
+    }
+
+    console.log(`用户 ${userId} 已离开房间 ${roomId}`);
+  }
 }
