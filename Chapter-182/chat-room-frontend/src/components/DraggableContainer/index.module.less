@@ -1,0 +1,26 @@
+.box {
+  display: flex;
+  .divider {
+  }
+}
+.box_column {
+  height: 100%;
+  flex-direction: column;
+  .divider {
+    height: 0px;
+    width: 100%;
+    position: relative;
+  }
+  .dividerCenter {
+    height: 6px;
+    width: auto;
+    top: 0px;
+    right: 0px;
+    left: 0;
+    z-index: 100;
+    transform: translateY(-50%);
+    &:hover {
+      cursor: row-resize;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useSocket } from "@/hooks/useSocket";
 import { useAuthStore } from "@/store/user";
@@ -8,6 +8,7 @@ import {} from "react-window";
 import { MessageType } from "@/types";
 import { Content } from "./components/Content";
 import ChatInput from "./components/ChatInput";
+import DraggableContainer from "@/components/DraggableContainer";
 
 import { generatePrivateRoomId } from "@/utils/room";
 
@@ -18,6 +19,7 @@ const ChatWindow = function (props: IProps) {
   const { friend } = props;
   console.log(friend);
   const { user, initialize } = useAuthStore();
+  const chatInputRef = useRef<HTMLElement>(null);
   const { messages, users, sendMessage, joinRoom, leaveRoom } = useSocket();
   useEffect(() => {
     if (!user?.id || !friend) return;
@@ -40,13 +42,16 @@ const ChatWindow = function (props: IProps) {
   };
   return (
     <div className="h-full flex flex-col w-full">
-      <Content
-        messages={messages}
-        userId={user?.id}
-        className="flex-1 "
-      ></Content>
-
-      <ChatInput className="h-[80px]" onSend={handleSend}></ChatInput>
+      <DraggableContainer layout="column">
+        <Content
+          messages={messages}
+          userId={user?.id}
+          className="flex-1"
+        ></Content>
+        <div className="h-[80px]" ref={chatInputRef}>
+          <ChatInput onSend={handleSend}></ChatInput>
+        </div>
+      </DraggableContainer>
     </div>
   );
 };
