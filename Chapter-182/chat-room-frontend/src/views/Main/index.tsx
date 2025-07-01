@@ -9,6 +9,7 @@ import { useMainStore, setMainPageActiveTab } from "./store/main";
 import FriendsPage from "./friends";
 import { getFriends } from "./store/friends";
 import GroupChatPage from "./groupChat";
+import Setting from "@/blocks/Setting";
 
 function Main() {
   const initNavConfig: INavItem[] = [
@@ -85,6 +86,9 @@ function Main() {
             );
           })}
         </ul>
+        <div className={styles.footer}>
+          <Setting />
+        </div>
       </div>
       <div className={styles.layoutRight}>
         {navConfig.map((item) => {

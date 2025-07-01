@@ -1,19 +1,29 @@
 import styles from "./index.module.less";
 import classnames from "classnames";
+
 import { useRef, useEffect, useState } from "react";
 interface IProps {
   //   children: React.ReactNode[];
   children: any;
   className?: string;
+  min?: number;
   layout?: "row" | "column";
   showLine?: boolean;
+  onResize?: (data: number) => void;
 }
 /**
  * children 元素数组
  * 必须有一个带ref属性的元素
  */
 function DraggableContainer(props: IProps) {
-  const { children, className, layout = "row", showLine = true } = props;
+  const {
+    children,
+    className,
+    layout = "row",
+    showLine = true,
+    min,
+    onResize,
+  } = props;
   const isRow = layout === "row";
   const volatileRef = children[0]?.ref || children[1]?.ref;
   const dividerRef = useRef<HTMLDivElement>(null);
@@ -58,6 +68,21 @@ function DraggableContainer(props: IProps) {
    */
   const moveHandle = (nowClientXY, leftDom, clientStart, volatileBoxXY) => {
     console.log(nowClientXY, leftDom, clientStart, volatileBoxXY);
+    const computedXY = nowClientXY - clientStart; // 计算当前鼠标位置和起始位置的差值
+    let finalXY = 0;
+    finalXY = children[0]?.ref
+      ? volatileBoxXY + computedXY
+      : volatileBoxXY - computedXY;
+    console.log(computedXY);
+    if (min && finalXY < min) {
+      return;
+    }
+    if (isRow) {
+      leftDom.style.width = finalXY + "px";
+    } else {
+      leftDom.style.height = finalXY + "px";
+    }
+    onResize && onResize(finalXY);
     //
   };
   return (

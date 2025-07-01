@@ -1,5 +1,6 @@
 import styles from "./index.module.less";
 import { useState, useRef, useEffect } from "react";
+import { Input } from "antd";
 import classnames from "classnames";
 import type { ToolItem } from "@/types";
 import Iconfont from "@/components/Iconfont";
@@ -46,6 +47,7 @@ function ChatInput(props: IProps) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+      inputRef.current?.focus();
     }
   };
 
@@ -59,7 +61,8 @@ function ChatInput(props: IProps) {
         ))}
       </div>
       <div className={styles.inputArea}>
-        <textarea
+        <Input.TextArea
+          name="inputArea"
           ref={inputRef}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

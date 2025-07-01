@@ -48,7 +48,7 @@ const ChatWindow = function (props: IProps) {
           userId={user?.id}
           className="flex-1"
         ></Content>
-        <div className="h-[80px]" ref={chatInputRef}>
+        <div ref={chatInputRef}>
           <ChatInput onSend={handleSend}></ChatInput>
         </div>
       </DraggableContainer>
