@@ -14,6 +14,7 @@ import { ChatroomModule } from './chatroom/chatroom.module';
 import { OssModule } from './oss/oss.module';
 import { ChatModule } from './chat/chat.module';
 import { ChatHistoryModule } from './chat-history/chat-history.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -43,6 +44,8 @@ import { ChatHistoryModule } from './chat-history/chat-history.module';
     ChatModule,
 
     ChatHistoryModule,
+
+    AiModule,
   ],
   controllers: [AppController],
   providers: [

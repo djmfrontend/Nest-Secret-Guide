@@ -1,6 +1,7 @@
 import createRequest from "./base";
 import type { ILogin, IRegister, IUser } from "./type";
 import type { IFriend } from "@/types";
+import type { IAi } from "@/types/ai";
 
 /** 用户登录接口 */
 const userLogin = createRequest<{ username: string; password: string }, ILogin>(
@@ -25,6 +26,10 @@ const userFriends = createRequest<void, IFriend[]>("/user/friendship", {
 const userInfo = createRequest<void, IUser>("/user/info", {
   method: "get",
 });
+// 请求AI
+const aiStream = createRequest<IAi, any>("/ai/stream", {
+  method: "post",
+});
 // 获取聊天记录
 
 // export const getChatHistory = createRequest<{ chatRoomId: number }, any>(
@@ -34,4 +39,11 @@ const userInfo = createRequest<void, IUser>("/user/info", {
 //   }
 // );
 
-export default { userLogin, sendCaptcha, userRegister, userFriends, userInfo };
+export default {
+  userLogin,
+  sendCaptcha,
+  userRegister,
+  userFriends,
+  userInfo,
+  aiStream,
+};

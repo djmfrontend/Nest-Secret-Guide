@@ -16,6 +16,11 @@ function Setting(props: IProps) {
   const { className, defaultMenu = 0 } = props;
   const [currentMenu, setCurrentMenu] = useState<number>(defaultMenu);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const menusList = [
+    {
+      label: "",
+    },
+  ];
   const showModal = (_currentMenu: number = 0) => {
     setIsModalVisible(true);
   };
