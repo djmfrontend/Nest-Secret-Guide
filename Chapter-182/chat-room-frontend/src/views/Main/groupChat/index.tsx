@@ -1,6 +1,7 @@
 import styles from "./index.module.less";
 import { Button } from "antd";
 import type { IAi } from "@/types";
+import Emoji from "@/components/Emoji";
 import api from "@/api";
 const GroupChatPage = () => {
   const handleRequest = () => {
@@ -27,6 +28,7 @@ const GroupChatPage = () => {
 
   return (
     <div className={styles.box}>
+      <Emoji></Emoji>
       <Button onClick={handleRequest}>发送测试请求</Button>
     </div>
   );

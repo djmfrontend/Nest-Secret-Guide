@@ -4,6 +4,7 @@ import { Input } from "antd";
 import classnames from "classnames";
 import type { ToolItem } from "@/types";
 import Iconfont from "@/components/Iconfont";
+import Emoji from "@/components/Emoji";
 
 interface IProps {
   className?: string;
@@ -11,25 +12,31 @@ interface IProps {
   placeholder?: string;
 }
 
-const tools: ToolItem[] = [
-  {
-    name: "emoji",
-    icon: "ic:baseline-emoji-emotions",
-  },
-  {
-    name: "image",
-    icon: "ic:baseline-image",
-  },
-  {
-    name: "file",
-    icon: "ic:baseline-attach-file",
-  },
-];
 function ChatInput(props: IProps) {
   const { className, onSend, placeholder = "输入消息..." } = props;
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
+  const handleEmoji = (emoji: string) => {
+    setInputValue(inputValue + emoji);
+    inputRef.current?.focus();
+  };
+  const tools: ToolItem[] = [
+    {
+      name: "emoji",
+      icon: "ic:baseline-emoji-emotions",
+      component: <Emoji onClick={handleEmoji} />,
+    },
+    {
+      name: "image",
+      icon: "ic:baseline-image",
+      component: <Iconfont code="ic:baseline-image" />,
+    },
+    {
+      name: "file",
+      icon: "ic:baseline-attach-file",
+      component: <Iconfont code="ic:baseline-attach-file" />,
+    },
+  ];
   const handleSend = () => {
     if (inputValue.trim()) {
       onSend?.(inputValue);
@@ -50,14 +57,22 @@ function ChatInput(props: IProps) {
       inputRef.current?.focus();
     }
   };
+  const handleToolClick = (name: string) => {
+    switch (name) {
+      case "emoji":
+        break;
+      case "file":
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div className={classnames(styles.container, className)}>
       <div className={styles.toolbar}>
         {tools.map((item) => (
-          <div key={item.name} className={styles.toolItem}>
-            <Iconfont code={item.icon} />
-          </div>
+          <div key={item.name}>{item.component}</div>
         ))}
       </div>
       <div className={styles.inputArea}>

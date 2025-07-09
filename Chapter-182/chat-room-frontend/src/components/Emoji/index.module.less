@@ -1,0 +1,25 @@
+.wrap {
+  width: 400px;
+}
+.box {
+  height: 200px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* 每行10列 */
+  gap: 8px; /* 调整间距 */
+
+  grid-gap: 8px;
+  width: calc(100% - 16px); /* 预留滚动条宽度（通常16px） */
+
+  overflow-y: auto;
+}
+.icon {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.icon:hover {
+  //
+  background-color: #f5f5f5;
+}

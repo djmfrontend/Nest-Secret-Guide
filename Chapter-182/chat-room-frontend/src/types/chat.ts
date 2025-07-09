@@ -43,4 +43,5 @@ export type MessageDirection = "incoming" | "outgoing";
 export interface ToolItem {
   name: string;
   icon: string;
+  component: any;
 }
