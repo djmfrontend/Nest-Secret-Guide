@@ -4,6 +4,7 @@ import { useState } from "react";
 import classnames from "classnames";
 import styles from "./index.module.less";
 import Iconfont from "@/components/Iconfont";
+import BaseSetting from "./BaseSetting";
 
 interface IProps {
   className?: string;
@@ -18,11 +19,15 @@ function Setting(props: IProps) {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const menusList = [
     {
-      label: "",
+      label: "基础设置",
+      icon: "ic:round-settings",
+      body: <BaseSetting />,
+      code: "basic",
     },
   ];
   const showModal = (_currentMenu: number = 0) => {
     setIsModalVisible(true);
+    setCurrentMenu(_currentMenu);
   };
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -51,7 +56,19 @@ function Setting(props: IProps) {
         width={800}
         onOk={handleOk}
         maskClosable={false}
-      ></Modal>
+      >
+        <div className={styles.modalBox}>
+          <div className={styles.menus}>
+            <div className={styles.menusTitle}></div>
+          </div>
+          <div className={styles.menuContent}>
+            <div className={classnames(styles.menuContentTitle)}>
+              {menusList[currentMenu].label}
+            </div>
+            {menusList[currentMenu].body}
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }
