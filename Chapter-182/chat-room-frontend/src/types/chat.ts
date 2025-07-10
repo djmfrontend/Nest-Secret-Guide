@@ -1,3 +1,4 @@
+import type { IFriend } from "./friends";
 export interface Message {
   id?: number;
   content: string;
@@ -44,4 +45,9 @@ export interface ToolItem {
   name: string;
   icon: string;
   component: any;
+}
+
+export interface IChatState {
+  currentFriend: IFriend | null;
+  setCurrentFriend: (friend: IFriend) => void;
 }

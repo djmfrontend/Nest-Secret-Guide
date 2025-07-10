@@ -1,6 +1,6 @@
 import { useFriendStore } from "../store/friends";
 import classnames from "classnames";
-
+import { useChatStore } from "@/store/chat";
 import { Dropdown } from "antd";
 import styles from "./index.module.less";
 import { useState } from "react";
@@ -12,7 +12,7 @@ const FriendsPage = () => {
   const friends = useFriendStore((state) => state.friends);
   const [activeId, setActiveId] = useState<number | null>(null);
   const { user } = useAuthStore();
-
+  const { setCurrentFriend, currentFriend } = useChatStore();
   const renderFriendsList = () => {
     return friends?.map((t) => {
       return (
@@ -23,6 +23,7 @@ const FriendsPage = () => {
             })}
             onClick={() => {
               setActiveId(t.id);
+              setCurrentFriend(t);
             }}
           >
             <div className={classnames(styles.menuItemsTitle)}>
@@ -33,7 +34,7 @@ const FriendsPage = () => {
       );
     });
   };
-  const friend = friends.find((item) => item.id === activeId);
+  // const friend = friends.find((item) => item.id === activeId);
   // 点击时 获取最近的聊天记录 传递给  chatWindow
   return (
     <div className={styles.box}>
@@ -42,7 +43,7 @@ const FriendsPage = () => {
         <div className={styles.menuBox}>{renderFriendsList()}</div>
       </div>
       <div className={styles.layoutRight}>
-        {friend ? <ChatWindow friend={friend} /> : null}
+        {currentFriend ? <ChatWindow friend={currentFriend} /> : null}
       </div>
     </div>
   );

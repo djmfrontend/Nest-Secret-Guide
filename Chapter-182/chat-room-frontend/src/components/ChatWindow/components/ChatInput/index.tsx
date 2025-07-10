@@ -5,6 +5,7 @@ import classnames from "classnames";
 import type { ToolItem } from "@/types";
 import Iconfont from "@/components/Iconfont";
 import Emoji from "@/components/Emoji";
+import UploadFile from "@/components/UploadFile";
 
 interface IProps {
   className?: string;
@@ -34,7 +35,7 @@ function ChatInput(props: IProps) {
     {
       name: "file",
       icon: "ic:baseline-attach-file",
-      component: <Iconfont code="ic:baseline-attach-file" />,
+      component: <UploadFile />,
     },
   ];
   const handleSend = () => {
