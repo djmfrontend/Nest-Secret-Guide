@@ -1,4 +1,6 @@
 @import url("../../styles/var.less");
+@primary-color: #9373ee;
+@color-hover-bg: #00070008;
 
 .box {
   .f-icon-button();
@@ -8,4 +10,35 @@
   margin: -16px;
   height: 70vh;
   overflow-y: auto;
+}
+.menus {
+  width: 200px;
+  background-color: var(--color-bg-subtle);
+  .menusTitle {
+    font-size: 16px;
+    padding-bottom: 10px;
+  }
+  .menuItem {
+    margin: 10px 0px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .activeMenu {
+    color: @primary-color;
+    background-color: @color-hover-bg;
+  }
+}
+.menuContent {
+  min-height: 400px;
+  padding: 20px;
+  flex: 1;
+
+  .menuContentTitle {
+    font-size: 16px;
+    padding-bottom: 20px;
+  }
 }

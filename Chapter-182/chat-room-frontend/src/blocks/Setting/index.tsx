@@ -5,6 +5,7 @@ import classnames from "classnames";
 import styles from "./index.module.less";
 import Iconfont from "@/components/Iconfont";
 import BaseSetting from "./BaseSetting";
+import UserSetting from "./UserSetting";
 
 interface IProps {
   className?: string;
@@ -24,6 +25,12 @@ function Setting(props: IProps) {
       body: <BaseSetting />,
       code: "basic",
     },
+    {
+      label: "个人信息设置",
+      icon: "ic:outline-account-circle",
+      body: <UserSetting />,
+      code: "user",
+    },
   ];
   const showModal = (_currentMenu: number = 0) => {
     setIsModalVisible(true);
@@ -32,6 +39,9 @@ function Setting(props: IProps) {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  function changeMenu(t: any) {
+    setCurrentMenu(t);
+  }
   const handleOk = () => {
     setIsModalVisible(false);
   };
@@ -60,6 +70,21 @@ function Setting(props: IProps) {
         <div className={styles.modalBox}>
           <div className={styles.menus}>
             <div className={styles.menusTitle}></div>
+            {menusList.map((t, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={changeMenu.bind(null, index)}
+                  className={classnames(styles.menuItem, {
+                    [styles.activeMenu]:
+                      t.label === menusList[currentMenu].label,
+                  })}
+                >
+                  <Iconfont className={styles.prefixIcon} code={t.icon} />
+                  {t.label}
+                </div>
+              );
+            })}
           </div>
           <div className={styles.menuContent}>
             <div className={classnames(styles.menuContentTitle)}>
