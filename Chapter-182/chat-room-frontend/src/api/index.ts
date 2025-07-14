@@ -1,6 +1,6 @@
 import createRequest from "./base";
 import type { ILogin, IRegister, IUser } from "./type";
-import type { IFriend } from "@/types";
+import type { IFriend, OssFileResponse } from "@/types";
 import type { IAi } from "@/types/ai";
 
 /** 用户登录接口 */
@@ -39,6 +39,13 @@ const aiStream = createRequest<IAi, any>("/ai/stream", {
 //   }
 // );
 
+const ossImageUrl = createRequest<{ key: string }, OssFileResponse>(
+  "/oss/json",
+  {
+    method: "get",
+  }
+);
+
 export default {
   userLogin,
   sendCaptcha,
@@ -46,4 +53,5 @@ export default {
   userFriends,
   userInfo,
   aiStream,
+  ossImageUrl,
 };

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOssDto } from './dto/create-oss.dto';
-import { UpdateOssDto } from './dto/update-oss.dto';
+import { OssFileResponse } from './dto/oss-response.dto';
 import * as OSS from 'ali-oss';
 import { v4 as uuidv4 } from 'uuid';
 import { Express } from 'express';
@@ -61,6 +60,35 @@ export class OssService {
       return result.content;
     }
     throw new Error('Failed to get file stream from OSS');
+  }
+
+  async getFileJson(key: string): Promise<OssFileResponse> {
+    if (!key || !key.trim()) {
+      return {
+        url: '',
+        key: '',
+        contentType: '',
+        size: 0,
+        expires: 0,
+        lastModified: new Date(),
+      };
+    }
+
+    const meta = await this.client.head(key);
+    // 生成签名url
+    const url = this.client.signatureUrl(key);
+    return {
+      url,
+      key,
+      contentType: meta.res.headers['content-type'],
+      size: meta.res.headers['content-length']
+        ? parseInt(meta.res.headers['content-length'])
+        : undefined,
+      expires: 7 * 24 * 3600, // 与签名URL保持一致
+      lastModified: meta.res.headers['last-modified']
+        ? new Date(meta.res.headers['last-modified'])
+        : undefined,
+    };
   }
   // 上传文件
 }

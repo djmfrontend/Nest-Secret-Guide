@@ -172,6 +172,7 @@ export default function createRequest<P = void, R = void>(
 
       request[method](eventualUrl, { [dataName]: params, ...restParams })
         .then((res) => {
+          console.log("res", res);
           if (!res) return;
           const {
             code,
