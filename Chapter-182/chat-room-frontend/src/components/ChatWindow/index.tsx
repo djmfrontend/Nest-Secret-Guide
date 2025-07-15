@@ -46,6 +46,7 @@ const ChatWindow = function (props: IProps) {
         <Content
           messages={messages}
           userId={user?.id}
+          friendId={friend.id}
           className="flex-1"
         ></Content>
         <div ref={chatInputRef}>

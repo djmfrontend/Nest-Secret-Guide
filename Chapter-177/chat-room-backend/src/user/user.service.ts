@@ -113,8 +113,23 @@ export class UserService {
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const foundUser = await this.prismaServce.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (foundUser) {
+      const user = await this.prismaServce.user.update({
+        where: {
+          id,
+        },
+        data: updateUserDto,
+      });
+      return user;
+    } else {
+      return '用户不存在';
+    }
   }
 
   remove(id: number) {

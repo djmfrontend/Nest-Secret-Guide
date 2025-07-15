@@ -10,6 +10,7 @@ import { useMemo, useRef, useEffect, useState } from "react";
 interface IProps {
   messages: HistoryMessage[];
   userId: number;
+  friendId: number;
   className?: string;
   listHeight?: number;
   listWidth?: number | string;
@@ -23,28 +24,28 @@ const Row = ({
 }: ListChildComponentProps<{
   messages: HistoryMessage[];
   currentUserId: number;
+  friendId: number;
 }>) => {
-  const { messages, currentUserId } = data;
+  const { messages, currentUserId, friendId } = data;
   const message = messages[index];
   const direction: MessageDirection =
     message.senderId === currentUserId ? "outgoing" : "incoming";
 
   return (
     <div style={style}>
-      <MessageItem message={message} direction={direction} />
+      <MessageItem
+        message={message}
+        direction={direction}
+        friendId={friendId}
+        userId={currentUserId}
+      />
     </div>
   );
 };
 export function Content(props: IProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dynamicHeight, setDynamicHeight] = useState(600);
-  const {
-    messages,
-    userId,
-    className,
-
-    listWidth = "100%",
-  } = props;
+  const { messages, userId, className, friendId, listWidth = "100%" } = props;
 
   useEffect(() => {
     const handleResize = () => {
@@ -69,8 +70,8 @@ export function Content(props: IProps) {
   };
   // 传递给 Row 的数据
   const itemData = useMemo(
-    () => ({ messages, currentUserId: userId }),
-    [messages, userId]
+    () => ({ messages, currentUserId: userId, friendId }),
+    [messages, userId, friendId]
   );
   const listRef = useRef<VariableSizeList>(null);
   useEffect(() => {

@@ -45,7 +45,13 @@ const ossImageUrl = createRequest<{ key: string }, OssFileResponse>(
     method: "get",
   }
 );
-
+const updateUserInfo = createRequest<{
+  headPic: string;
+  nickName: string;
+  email: string;
+}>("/user/update_info", {
+  method: "post",
+});
 export default {
   userLogin,
   sendCaptcha,
@@ -54,4 +60,5 @@ export default {
   userInfo,
   aiStream,
   ossImageUrl,
+  updateUserInfo,
 };

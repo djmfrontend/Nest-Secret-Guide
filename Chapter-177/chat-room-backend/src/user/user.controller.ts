@@ -94,4 +94,10 @@ export class UserController {
   async friendship(@UserInfo() user: JwtUserData) {
     return this.userService.getFriendship(user.userId);
   }
+
+  @Post('update_info')
+  @RequireLogin()
+  async updateInfo(@Body() body: UpdateUserDto, @UserInfo() user: JwtUserData) {
+    return this.userService.update(user.userId, body);
+  }
 }

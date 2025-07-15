@@ -8,6 +8,9 @@ interface IProps {
   className?: string;
   width?: string | number;
 }
+// 为避免多次请求图片，使用缓存
+const imageUrlCache = new Map<string, string>();
+
 function ImageSafe(props: IProps) {
   const { ossPath, className, width = 50 } = props;
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -15,20 +18,36 @@ function ImageSafe(props: IProps) {
 
   useEffect(() => {
     function getImageUrl() {
+      if (imageUrlCache.has(ossPath)) {
+        setImageUrl(imageUrlCache.get(ossPath) as string);
+        return;
+      }
       console.log(ossPath);
       setLoading(true);
-      setTimeout(() => {
-        api.ossImageUrl({ key: ossPath }).then((res) => {
-          setImageUrl(res.url);
-          setLoading(false);
-        });
-      }, 3000);
+      //   setTimeout(() => {
+
+      //   }, 3000);
+      api.ossImageUrl({ key: ossPath }).then((res) => {
+        imageUrlCache.set(ossPath, res.url);
+        setImageUrl(res.url);
+        setLoading(false);
+      });
     }
     getImageUrl();
   }, [ossPath]);
   if (loading) {
-    return <Skeleton.Image active className={className} />;
+    return (
+      <Skeleton.Image
+        style={{
+          width: `${width}px`,
+          height: `${width}px`,
+        }}
+        active
+        className={className}
+      />
+    );
   }
+
   if (!imageUrl) {
     return <Image src={errorImage} preview={false} width={width}></Image>;
   }

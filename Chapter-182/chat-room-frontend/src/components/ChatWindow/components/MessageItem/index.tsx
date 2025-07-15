@@ -4,13 +4,20 @@ import dayjs from "dayjs";
 import { MessageType, MessageStatus } from "@/types/chat";
 import { forwardRef } from "react";
 import styles from "./index.module.less";
+import ImageSafe from "@/components/ImageSafe";
+import { useFriendStore } from "@/views/Main/store/friends";
+import { useAuthStore } from "@/store/user";
 interface IProps {
   message: HistoryMessage;
   direction: MessageDirection;
+  userId: number;
+  friendId: number;
 }
 const MessageItem = forwardRef<HTMLDivElement, IProps>(function (props, ref) {
   const { message, direction } = props;
-
+  const { user } = useAuthStore();
+  const { friends } = useFriendStore();
+  const friend = friends.find((item) => item.id === props.friendId);
   const renderMessageStatus = (status: MessageStatus) => {
     if (direction === "incoming") return null;
 
@@ -56,16 +63,37 @@ const MessageItem = forwardRef<HTMLDivElement, IProps>(function (props, ref) {
       ref={ref}
       className={`${styles.messageContainer} ${styles[direction]}`}
     >
-      <div>头像</div>
-      <div className={styles.messageBubble}>
-        {renderMessageContent()}
-        <div className={styles.messageMeta}>
-          <span className={styles.time}>
-            {dayjs(message.createdTime).format("YYYY-MM-DD hh:mm:ss")}
-          </span>
-          {renderMessageStatus(message.status)}
-        </div>
-      </div>
+      {direction === "incoming" ? (
+        <>
+          <div>
+            <ImageSafe ossPath={friend!.headPic}></ImageSafe>
+          </div>
+          <div className={styles.messageBubble}>
+            {renderMessageContent()}
+            <div className={styles.messageMeta}>
+              <span className={styles.time}>
+                {dayjs(message.createdTime).format("YYYY-MM-DD hh:mm:ss")}
+              </span>
+              {renderMessageStatus(message.status)}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={styles.messageBubble}>
+            {renderMessageContent()}
+            <div className={styles.messageMeta}>
+              <span className={styles.time}>
+                {dayjs(message.createdTime).format("YYYY-MM-DD hh:mm:ss")}
+              </span>
+              {renderMessageStatus(message.status)}
+            </div>
+          </div>
+          <div>
+            <ImageSafe ossPath={user!.headPic}></ImageSafe>
+          </div>
+        </>
+      )}
     </div>
   );
 });
