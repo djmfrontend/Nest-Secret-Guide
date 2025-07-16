@@ -3,11 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "src/main/main.js",
   "scripts": {
     "dev": "vite --port 8082",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "electron ."
   },
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
@@ -41,6 +43,7 @@
     "@types/react-dom": "^19.1.2",
     "@types/react-window": "^1.8.8",
     "@vitejs/plugin-react": "^4.4.1",
+    "electron": "^37.2.1",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",

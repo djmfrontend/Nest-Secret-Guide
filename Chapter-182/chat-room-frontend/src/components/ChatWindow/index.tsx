@@ -1,16 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import { useEffect, useRef } from "react";
+
 import { useSocket } from "@/hooks/useSocket";
 import { useAuthStore } from "@/store/user";
 import type { IFriend } from "@/types";
-import { Input, Button } from "antd";
+
 import {} from "react-window";
 import { MessageType } from "@/types";
 import { Content } from "./components/Content";
 import ChatInput from "./components/ChatInput";
 import DraggableContainer from "@/components/DraggableContainer";
-
-import { generatePrivateRoomId } from "@/utils/room";
 
 interface IProps {
   friend: IFriend;
@@ -18,9 +16,9 @@ interface IProps {
 const ChatWindow = function (props: IProps) {
   const { friend } = props;
   console.log(friend);
-  const { user, initialize } = useAuthStore();
+  const { user } = useAuthStore();
   const chatInputRef = useRef<HTMLElement>(null);
-  const { messages, users, sendMessage, joinRoom, leaveRoom } = useSocket();
+  const { messages, sendMessage, joinRoom, leaveRoom } = useSocket();
   useEffect(() => {
     if (!user?.id || !friend) return;
     // const roomId = generatePrivateRoomId(user.id, friend.id);

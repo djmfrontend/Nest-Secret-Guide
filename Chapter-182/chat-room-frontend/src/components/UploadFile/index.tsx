@@ -22,6 +22,7 @@ function UploadFile() {
     console.log(file);
     return false;
   };
+
   const handleOK = () => {
     setPreviewVisible(false);
   };
