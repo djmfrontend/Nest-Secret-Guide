@@ -24,6 +24,9 @@ export class ChatHistoryService {
       }),
       this.prismaService.chatHistory.count(),
     ]);
+
+    // 还需要返回hasMore字段
+
     return {
       list: historys,
       count,

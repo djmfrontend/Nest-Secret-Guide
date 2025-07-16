@@ -1,6 +1,6 @@
 import MessageItem from "../MessageItem/index";
 import { VariableSizeList } from "react-window";
-import type { ListChildComponentProps } from "react-window";
+import type { ListChildComponentProps, ListOnScrollProps } from "react-window";
 import type { HistoryMessage, MessageDirection } from "@/types";
 import { MessageType } from "@/types/chat";
 import classnames from "classnames";
@@ -15,6 +15,9 @@ interface IProps {
   listHeight?: number;
   listWidth?: number | string;
   itemSize?: number;
+  loading?: boolean; // 是否正在加载
+  hasMore?: boolean; //是否还有更多数据加载
+  onLoadMore?: () => void; // 加载更多的回调
 }
 
 const Row = ({
@@ -45,7 +48,16 @@ const Row = ({
 export function Content(props: IProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dynamicHeight, setDynamicHeight] = useState(600);
-  const { messages, userId, className, friendId, listWidth = "100%" } = props;
+  const {
+    messages,
+    userId,
+    className,
+    friendId,
+    listWidth = "100%",
+    loading = false,
+    onLoadMore,
+    hasMore = true,
+  } = props;
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,11 +91,25 @@ export function Content(props: IProps) {
       listRef.current?.scrollToItem(messages.length - 1, "end");
     }
   }, [messages]);
+  const handleScroll = (data: ListOnScrollProps) => {
+    const { scrollDirection, scrollOffset } = data;
+    if (
+      scrollDirection === "backward" &&
+      scrollOffset < 100 &&
+      hasMore &&
+      !loading &&
+      onLoadMore
+    ) {
+      onLoadMore();
+      //
+    }
+  };
   return (
     <div className={classnames(className, styles.content)} ref={containerRef}>
       <VariableSizeList
         height={dynamicHeight}
         width={listWidth}
+        onScroll={handleScroll}
         itemCount={messages.length}
         itemSize={getItemSize}
         itemData={itemData}

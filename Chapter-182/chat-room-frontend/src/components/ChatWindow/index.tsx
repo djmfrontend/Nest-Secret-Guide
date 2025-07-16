@@ -38,11 +38,15 @@ const ChatWindow = function (props: IProps) {
       content: content,
     });
   };
+  const loadMoreMessages = async () => {
+    console.log("loadMoreMessages");
+  };
   return (
     <div className="h-full flex flex-col w-full">
       <DraggableContainer layout="column">
         <Content
           messages={messages}
+          onLoadMore={loadMoreMessages}
           userId={user?.id}
           friendId={friend.id}
           className="flex-1"
