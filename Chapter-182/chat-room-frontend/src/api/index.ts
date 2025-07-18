@@ -52,6 +52,14 @@ const updateUserInfo = createRequest<{
 }>("/user/update_info", {
   method: "post",
 });
+
+const getHistoryMessage = createRequest<{
+  chatRoomId: string;
+  page: number;
+  pageSize: number;
+}>("/chat-history/list", {
+  method: "post",
+});
 export default {
   userLogin,
   sendCaptcha,
