@@ -1,0 +1,8 @@
+export const KEY_TOKEN = "VOCECHAT_TOKEN";
+export const KEY_REFRESH_TOKEN = "VOCECHAT_REFRESH_TOKEN";
+export const KEY_EXPIRE = "VOCECHAT_TOKEN_EXPIRE";
+export const tokenHeader = "X-API-Key";
+export const KEY_LOGIN_USER = "VOCECHAT_LOGIN_USER";
+export const KEY_UID = "VOCECHAT_CURR_UID";
+export const KEY_DEVICE_ID = "VOCECHAT_DEVICE_KEY";
+export const KEY_DEVICE_TOKEN = "VOCECHAT_DEVICE_TOKEN";

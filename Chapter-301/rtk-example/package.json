@@ -1,5 +1,5 @@
 {
-  "name": "redux-ts",
+  "name": "rtk-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,14 +11,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
-    "@tailwindcss/vite": "^4.1.11",
-    "@types/node": "^24.1.0",
-    "dayjs": "^1.11.13",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-redux": "^9.2.0",
-    "react-router-dom": "^7.7.0",
-    "tailwindcss": "^4.1.11"
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
