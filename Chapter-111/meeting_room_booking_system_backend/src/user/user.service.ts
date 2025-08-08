@@ -1,6 +1,6 @@
 import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { RegisterUserDto } from './dto/RegisterUserDto';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { HttpStatus } from '@nestjs/common';
@@ -173,5 +173,44 @@ export class UserService {
     await this.userRepository.update(userId, {
       password: md5(password),
     });
+  }
+
+  async freezeUserById(userId: number) {
+    const user = await this.userRepository.findOneBy({
+      id: userId,
+    });
+    if (user) {
+      user.isFrozen = true;
+      await this.userRepository.save(user);
+    }
+  }
+  async findUserByPage(
+    pageNo: number,
+    pageSize: number,
+    username: string,
+    nickName: string,
+    email: string,
+  ) {
+    const skipCount = pageSize * (pageNo - 1);
+    const condition: Record<string, any> = {};
+    if (username) {
+      condition.username = Like(`%${username}%`);
+    }
+    if (nickName) {
+      condition.nickName = Like(`%${nickName}%`);
+    }
+    if (email) {
+      condition.email = Like(`%${email}%`);
+    }
+    const [users, totalCount] = await this.userRepository.findAndCount({
+      skip: skipCount,
+      take: pageSize,
+      where: condition,
+    });
+
+    return {
+      users,
+      totalCount,
+    };
   }
 }

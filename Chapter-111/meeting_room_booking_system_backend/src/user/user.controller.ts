@@ -5,6 +5,11 @@ import {
   Get,
   Query,
   UnauthorizedException,
+  ParseIntPipe,
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/RegisterUserDto';
@@ -189,5 +194,46 @@ export class UserController {
     await this.userService.updatePassword(user.userId, body.password);
 
     return 'success';
+  }
+  @Get('freeze')
+  async freeze(@Query('id') userId: number) {
+    await this.userService.freezeUserById(userId);
+    return 'success';
+  }
+  @Get('list')
+  async list(
+    @Query(
+      'pageNo',
+      new DefaultValuePipe(1),
+      new ParseIntPipe({
+        exceptionFactory() {
+          throw new BadRequestException('pageNo is required');
+        },
+      }),
+    )
+    pageNo: number,
+    @Query(
+      'pageSize',
+      new DefaultValuePipe(10),
+      new ParseIntPipe({
+        exceptionFactory() {
+          throw new BadRequestException('pageSize is required');
+        },
+      }),
+    )
+    pageSize: number,
+
+    @Query('username') username: string,
+    @Query('nickName') nickName: string,
+    @Query('email') email: string,
+  ) {
+    //
+    return await this.userService.findUserByPage(
+      pageNo,
+      pageSize,
+      username,
+      nickName,
+      email,
+    );
   }
 }

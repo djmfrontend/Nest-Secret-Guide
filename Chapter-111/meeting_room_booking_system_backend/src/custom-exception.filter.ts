@@ -7,15 +7,21 @@ import {
 import { Response } from 'express';
 
 @Catch(HttpException)
-export class CustomExceptionFilter<T> implements ExceptionFilter {
+export class CustomExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
     response.statusCode = exception.getStatus();
+    // 处理 校验带来的 问题
+    const res = exception.getResponse() as { message: string[] };
+    console.log(res.message);
     response
       .json({
         code: exception.getStatus(),
-        message: exception.message || '服务器异常',
-        data: exception.getResponse(),
+        message: 'fail',
+        data:
+          res.message && Array.isArray(res.message)
+            ? res.message?.join(',')
+            : res.message || exception.message,
       })
       .end();
   }
