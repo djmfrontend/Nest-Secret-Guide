@@ -11,6 +11,7 @@ import {
   HttpStatus,
   DefaultValuePipe,
 } from '@nestjs/common';
+import { RefreshTokenVo } from './vo/refresh-token.vo';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/RegisterUserDto';
 import { Inject } from '@nestjs/common';
@@ -20,6 +21,14 @@ import { ConfigService } from '@nestjs/config';
 import { RequireLogin, UserInfo } from 'src/custom.decorator';
 import { UserDetailVo } from './vo/user-info.vo';
 import { JwtUserData } from 'src/types/jwt';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+@ApiTags('用户管理模块')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -28,6 +37,15 @@ export class UserController {
 
   @Inject(ConfigService)
   private configService: ConfigService;
+
+  @ApiBody({
+    type: RegisterUserDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: '注册成功',
+    type: String,
+  })
   @Post('register')
   register(@Body() registerUser: RegisterUserDto) {
     console.log(registerUser);
@@ -83,8 +101,23 @@ export class UserController {
     );
     return vo;
   }
+
+  @ApiQuery({
+    name: 'refreshToken',
+    type: String,
+    description: '用户刷新令牌',
+    required: true,
+    example:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc1NDY0NTcyMCwiZXhwIjoxNzU1MjUwNTIwfQ.hr6yMn_HmC4M7Wrh8gcUbfA88DouBU5tVYaLAD3ab-g',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: RefreshTokenVo,
+    description: '刷新令牌成功',
+  })
   @Get('refresh')
   async refresh(@Query('refreshToken') refreshToken: string) {
+    const vo = new RefreshTokenVo();
     try {
       const data = this.jwtService.verify<{
         userId: number;
@@ -106,15 +139,13 @@ export class UserController {
           },
           { expiresIn: this.configService.get('jwt.refreshExpiresIn') || '7d' },
         );
-        return {
-          accessToken,
-          refreshToken,
-        };
+        vo.accessToken = accessToken;
+        vo.refreshToken = refreshToken;
+        return vo;
       } else {
-        return {
-          accessToken: '',
-          refreshToken: '',
-        };
+        vo.accessToken = '';
+        vo.refreshToken = '';
+        return vo;
       }
     } catch (e) {
       //
@@ -160,6 +191,8 @@ export class UserController {
     }
   }
 
+  // 需要登录才能调用的接口也需要加上标注 认证的方式 需要在配置文件中配置
+  @ApiBearerAuth()
   @Get('info')
   @RequireLogin()
   async info(@UserInfo('userId') userId: number) {
